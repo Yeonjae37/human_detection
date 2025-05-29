@@ -153,22 +153,31 @@ except Exception as e:
         raise e
 
 
-# Setup configuration
 setup(
-    name=NAME,
-    version=VERSION,
-    description=DESCRIPTION,
-    long_description=LONG_DESCRIPTION,
-    long_description_content_type="text/markdown",
-    url=URL,
-    author=AUTHOR,
-    author_email=AUTHOR_EMAIL,
-    license=LICENSE,
-    packages=find_packages(exclude="notebooks"),
-    include_package_data=True,
-    install_requires=REQUIRED_PACKAGES,
-    extras_require=EXTRA_PACKAGES,
-    python_requires=">=3.10.0",
-    ext_modules=get_extensions(),
-    cmdclass=cmdclass,
+    name="human_detection",
+    version="0.1.0",
+    description="Human detection + SAM2 demo",
+    author="Yeonjae37",
+    python_requires=">=3.10",
+
+    package_dir={"": "src"},
+    packages=find_packages(where="src"),
+
+    install_requires=[
+        "torch>=2.3.1",
+        "torchvision>=0.18.1",
+        "opencv-python>=4.9.0.80",
+        "numpy>=1.24.4",
+        "flask>=3.0.3",
+        "ffmpeg-python>=0.2.0",
+        "ultralytics>=8.3.131",
+        "hydra-core>=1.3.2",
+    ],
+
+    extras_require={
+        "dev": [
+            "black",
+            "ruff",
+        ]
+    },
 )
