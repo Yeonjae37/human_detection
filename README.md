@@ -1,8 +1,6 @@
-# SAM2 Real-Time Detection and Tracking
+# Real-Time Human Detection & Tracking
 
-This repository adapts **[SAM2](https://github.com/facebookresearch/sam2)** to include real-time multi-object tracking. 
-It allows users to specify and track a fixed number of objects in real time, integrating motion modeling 
-from **[SAMURAI](https://github.com/yangchris11/samurai)** for improved tracking in complex scenarios.  
+This repository combines **YOLOv8** and **[SAM2](https://github.com/facebookresearch/sam2)** (with motion modeling from **[SAMURAI](https://github.com/yangchris11/samurai)**) into a single end-to-end pipeline for real-time person detection, pixel-precise segmentation, PTZ camera tracking, and anomaly alerts.
 
 ### About SAM2
 **SAM2** (Segment Anything Model 2) is designed for object segmentation and tracking but lacks built-in capabilities 
@@ -12,42 +10,53 @@ for performing this in real time.
 **SAMURAI** enhances SAM2 by introducing motion modeling, leveraging temporal motion cues for better 
 tracking accuracy without retraining or fine-tuning.  
 
-#### Note on SAMURAI Features
-While this repository integrates SAMURAI's motion modeling, it does not support the motion-aware memory selection mechanism, 
-as conditional operations applied to memory would simultaneously affect all tracked objects.
-
-The core implementation of SAMURAI's motion modeling, originally found in 
-[sam2_base.py](https://github.com/yangchris11/samurai/blob/master/sam2/sam2/modeling/sam2_base.py) in SAMURAI's 
-repository, has been relocated to 
-[sam2_object_tracker.py](https://github.com/zdata-inc/sam2_realtime/blob/main/sam2/sam2_object_tracker.py) in this 
-repository to maintain the original SAM2 codebase.
 
 ## Key Features
 
-- **Real-Time Tracking**: Modified SAM2 to track a fixed number of objects in real time.
-- **Motion-Aware Memory**: SAMURAI leverages temporal motion cues for robust object tracking without retraining or fine-tuning.
+- **YOLOv8 Person Detection**  
+  Ultra-fast bounding-box detection of humans in each video frame.
 
-The core implementation resides in `sam2_object_tracker.py`, where the number of objects to track must be specified during instantiation.
+- **SAM2 Segmentation & Tracking**  
+  Pixel-accurate masks + centroid extraction to hand off to the PTZ controller.
+
+- **Motion-Aware Tracking**  
+  SAMURAI motion modeling ensures stable multi-object tracks without retraining.
+
+- **Anomaly Alerting**  
+  Detects “stop-and-interact” behavior (e.g., a thief grabbing an object) and generates an alert.
+
 
 ---
 
 ## Setup Instructions
+I recommend using uv venv to create isolated environments, simplifying dependency management and ensuring reproducible setups.
 
-### 1. Create Conda Environment
+### 1. Create & activate virtualenv
 ```bash
-conda create -n sam2 python=3.10.15
+# Install the 'uv' CLI and create a new venv
+pip install uv
+uv venv
+
+# On macOS / Linux
+source .venv/bin/activate
+# On Windows (PowerShell)
+source .venv/Scripts/activate
 ```
 
-### 2. Clone SAM2 Realtime Repo
+### 2. Clone the repository
 ```
-git clone https://github.com/zdata-inc/sam2_realtime
+git clone https://github.com/Yeonjae37/human_detection.git
 ```
 
-### 2. Install SAM2
+### 3. Install packages
 ```
-cd sam2_realtime
-pip install -e .
-pip install -e ".[notebooks]"
+cd human_detection
+
+# Install the core package (SAM2 + demo app) in editable mode
+uv pip install -e .
+
+# If you also want the Jupyter notebook dependencies:
+uv pip install -e ".[notebooks]"
 ```
 
 
@@ -67,33 +76,35 @@ Run the demo notebook to visualize real-time SAM2 object tracking in action:
 
 
 ### Acknowledgment
-SAM2 Realtime extends [SAM 2](https://github.com/facebookresearch/sam2) by Meta FAIR, designed to enable real-time tracking. 
-It integrates motion-aware segmentation techniques developed in [SAMURAI](https://github.com/yangchris11/samurai) by 
-the Information Processing Lab at the University of Washington.
+This project leverages:  
+- **YOLOv8** by Ultralytics for ultra-fast real-time person detection.  
+- **SAM2** by Meta FAIR for pixel-precise segmentation and tracking.  
+- **SAMURAI** by the University of Washington’s Information Processing Lab for motion-aware memory modeling.  
 
 
 ## Citation
 ```
+@article{glenn2024yolov8,
+  title={YOLOv8: Next-Generation Real-Time Object Detection},
+  author={Glenn Jocher and Ultralytics},
+  year={2024},
+  url={https://github.com/ultralytics/ultralytics}
+}
+
 @article{ravi2024sam2,
   title={SAM 2: Segment Anything in Images and Videos},
-  author={Ravi, Nikhila and Gabeur, Valentin and Hu, Yuan-Ting and Hu, Ronghang and Ryali, Chaitanya and Ma, 
-  Tengyu and Khedr, Haitham and R{\"a}dle, Roman and Rolland, Chloe and Gustafson, Laura and Mintun, Eric and Pan, 
-  Junting and Alwala, Kalyan Vasudev and Carion, Nicolas and Wu, Chao-Yuan and Girshick, Ross and Doll{\'a}r, 
-  Piotr and Feichtenhofer, Christoph},
-  journal={arXiv preprint arXiv:2408.00714},
-  url={https://arxiv.org/abs/2408.00714},
-  year={2024}
+  author={Ravi et al.},
+  year={2024},
+  url={https://arxiv.org/abs/2408.00714}
 }
 
 @misc{yang2024samurai,
-      title={SAMURAI: Adapting Segment Anything Model for Zero-Shot Visual Tracking with Motion-Aware Memory}, 
-      author={Cheng-Yen Yang and Hsiang-Wei Huang and Wenhao Chai and Zhongyu Jiang and Jenq-Neng Hwang},
-      year={2024},
-      eprint={2411.11922},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2411.11922}, 
+  title={SAMURAI: Adapting SAM for Zero-Shot Visual Tracking with Motion-Aware Memory},
+  author={Yang et al.},
+  year={2024},
+  url={https://arxiv.org/abs/2411.11922}
 }
+
 ```
 
 ---
