@@ -84,7 +84,7 @@ uv pip install -e .
 
 # If you want to use GPU acceleration (CUDA), you must install PyTorch with the correct CUDA version manually.
 # For example, to install PyTorch with CUDA 12.1, run the following command before installing the rest:
-pip install torch==2.3.1 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+uv pip install torch==2.3.1 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 
 ```
 
