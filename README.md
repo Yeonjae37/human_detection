@@ -11,6 +11,33 @@ for performing this in real time.
 tracking accuracy without retraining or fine-tuning.  
 
 
+## Project Structure
+```
+human_detection/
+├── src/                   # Source code
+│   ├── sam2/              # SAM2 library
+│   └── human_detection/   # Main package
+│       ├── __init__.py
+│       ├── app.py         # Main application
+│       ├── config/        # Configuration files
+│       │   └── settings.py
+│       ├── models/        # Model implementations
+│       │   ├── detector.py
+│       │   └── tracker.py
+│       ├── utils/         # Utilities
+│       │   ├── alerts.py
+│       │   └── visualization.py
+│       └── web/           # Web interface
+│           ├── routes.py
+│           └── templates/
+│               └── index.html
+├── tests/               # Test code
+├── checkpoints/         # Model checkpoints
+├── setup.py             # Package configuration
+├── pyproject.toml       # Build system configuration
+└── README.md
+```
+
 ## Key Features
 
 - **YOLOv8 Person Detection**  
@@ -23,7 +50,7 @@ tracking accuracy without retraining or fine-tuning.
   SAMURAI motion modeling ensures stable multi-object tracks without retraining.
 
 - **Anomaly Alerting**  
-  Detects “stop-and-interact” behavior (e.g., a thief grabbing an object) and generates an alert.
+  Detects "stop-and-interact" behavior (e.g., a thief grabbing an object) and generates an alert.
 
 
 ---
@@ -44,21 +71,22 @@ source .venv/Scripts/activate
 ```
 
 ### 2. Clone the repository
-```
+```bash
 git clone https://github.com/Yeonjae37/human_detection.git
 ```
 
 ### 3. Install packages
-```
+```bash
 cd human_detection
 
 # Install the core package (SAM2 + demo app) in editable mode
 uv pip install -e .
 
-# If you also want the Jupyter notebook dependencies:
-uv pip install -e ".[notebooks]"
-```
+# If you want to use GPU acceleration (CUDA), you must install PyTorch with the correct CUDA version manually.
+# For example, to install PyTorch with CUDA 12.1, run the following command before installing the rest:
+pip install torch==2.3.1 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 
+```
 
 ### 4. Download SAM2 Checkpoints
 ```bash
@@ -70,16 +98,27 @@ cd ..
 ---
 
 ## Usage
-### Demo
-Run the demo notebook to visualize real-time SAM2 object tracking in action:  
-`notebooks/realtime_detect_and_track.ipynb`
+### Web Application
+Run the web application for real-time human detection and tracking:
 
+```bash
+python -m human_detection.app
+```
+
+After running, access the web interface at `http://localhost:5000`.
+
+### Customization
+You can customize various settings in `src/human_detection/config/settings.py`:
+
+- **Camera Settings**: Change `CAMERA_INDEX` to use different cameras
+- **Model Paths**: Update `YOLO_MODEL_PATH` and `SAM_CHECKPOINT_PATH` to use different model checkpoints
+- **Detection Thresholds**: Adjust `STATIONARY_THRESHOLD` and `MASK_THRESHOLD` to fine-tune detection sensitivity
 
 ### Acknowledgment
 This project leverages:  
 - **YOLOv8** by Ultralytics for ultra-fast real-time person detection.  
 - **SAM2** by Meta FAIR for pixel-precise segmentation and tracking.  
-- **SAMURAI** by the University of Washington’s Information Processing Lab for motion-aware memory modeling.  
+- **SAMURAI** by the University of Washington's Information Processing Lab for motion-aware memory modeling.  
 
 
 ## Citation

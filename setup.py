@@ -1,6 +1,3 @@
-# Copyright (c) Meta Platforms, Inc. and affiliates.
-# All rights reserved.
-
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 import os
@@ -8,12 +5,12 @@ import os
 from setuptools import find_packages, setup
 
 # Package metadata
-NAME = "SAM-2"
+NAME = "DEMO"
 VERSION = "1.0"
-DESCRIPTION = "SAM 2: Segment Anything in Images and Videos"
-URL = "https://github.com/facebookresearch/sam2"
-AUTHOR = "Meta AI"
-AUTHOR_EMAIL = "segment-anything@meta.com"
+DESCRIPTION = "SAM 2 Human Detection Demo"
+URL = "https://github.com/NVA-Lab/intrusion-detector.git"
+AUTHOR = "KIST-NVA Lab"
+AUTHOR_EMAIL = "yeonjae.jeong@kist.re.kr"
 LICENSE = "Apache 2.0"
 
 # Read the contents of README file
@@ -24,7 +21,7 @@ with open("README.md", "r", encoding="utf-8") as f:
 REQUIRED_PACKAGES = [
     "torch>=2.3.1",
     "torchvision>=0.18.1",
-    "numpy>=1.24.4",
+    "numpy>=1.26.4",
     "tqdm>=4.66.1",
     "hydra-core>=1.3.2",
     "iopath>=0.1.10",
@@ -64,16 +61,9 @@ EXTRA_PACKAGES = {
     ],
 }
 
-# By default, we also build the SAM 2 CUDA extension.
-# You may turn off CUDA build with `export SAM2_BUILD_CUDA=0`.
 BUILD_CUDA = os.getenv("SAM2_BUILD_CUDA", "1") == "1"
-# By default, we allow SAM 2 installation to proceed even with build errors.
-# You may force stopping on errors with `export SAM2_BUILD_ALLOW_ERRORS=0`.
 BUILD_ALLOW_ERRORS = os.getenv("SAM2_BUILD_ALLOW_ERRORS", "1") == "1"
 
-# Catch and skip errors during extension building and print a warning message
-# (note that this message only shows up under verbose build mode
-# "pip install -v -e ." or "python setup.py build_ext -v")
 CUDA_ERROR_MSG = (
     "{}\n\n"
     "Failed to build the SAM 2 CUDA extension due to the error above. "
@@ -156,13 +146,13 @@ except Exception as e:
 setup(
     name="human_detection",
     version="0.1.0",
-    description="Human detection + SAM2 demo",
+    description="Human detection using SAM2 and YOLO",
     author="Yeonjae37",
-    python_requires=">=3.10",
-
+    python_requires=">=3.8",
+    
     package_dir={"": "src"},
     packages=find_packages(where="src"),
-
+    
     install_requires=[
         "torch>=2.3.1",
         "torchvision>=0.18.1",
@@ -172,12 +162,15 @@ setup(
         "ffmpeg-python>=0.2.0",
         "ultralytics>=8.3.131",
         "hydra-core>=1.3.2",
+        "iopath>=0.1.10",
     ],
-
+    
     extras_require={
         "dev": [
+            "pytest",
             "black",
-            "ruff",
-        ]
+            "isort",
+            "mypy",
+        ],
     },
 )
